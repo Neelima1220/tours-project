@@ -6,7 +6,6 @@ export default function App() {
   const url = 'https://course-api.com/react-tours-project';
 
   const [data, setData] = useState();
-  const [showMore, setShowMore] = useState(false);
 
   const fetchData = async () => {
     const response = await (await fetch(url)).json();
