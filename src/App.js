@@ -10,7 +10,6 @@ export default function App() {
 
   const fetchData = async () => {
     const response = await (await fetch(url)).json();
-    console.log(response);
     setData(response);
   };
   useEffect(() => {
@@ -26,23 +25,29 @@ export default function App() {
     setData(newData);
   };
   const clearAll = () => {
-    setData({});
+    setData([]);
   };
   const handleShowMore = (i) => {
     const tempData = cloneDeep(data);
     const newData = tempData.map((item, index) => {
       if (index === i) {
-        setShowMore(true);
+        if (item?.show === true) {
+          return { ...item, show: false };
+        } else {
+          return { ...item, show: true };
+        }
       } else {
-        setShowMore(false);
+        return item;
       }
     });
-    // setShowMore(!showMore);
+    setData(newData);
   };
+  console.log(data?.length);
 
   return (
     <div>
-      <button onClick={clearAll}>clear All</button>
+      {data?.length === 0 && <button onClick={fetchData}>fetchData</button>}
+      {data?.length > 0 && <button onClick={clearAll}>clear All</button>}
       {data?.length > 0 &&
         data.map((item, index) => {
           return (
@@ -50,9 +55,9 @@ export default function App() {
               <h4>{item.name}</h4>
               <p>{item.info.slice(0, 99)}</p>
               <button onClick={() => handleShowMore(index)}>
-                {showMore ? 'show less' : 'show more'}
+                {item.show ? 'show less' : 'show more'}
               </button>
-              {showMore && <p>{item.info.slice(99, item.info.length)}</p>}
+              {item.show && <p>{item.info.slice(99, item.info.length)}</p>}
               <span>{item.price}</span>
               <button onClick={() => handleRemove(index)}>remove</button>
             </div>
